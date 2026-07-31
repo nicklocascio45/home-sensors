@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "compilerPath": "/opt/homebrew/bin/arm-none-eabi-gcc",
+            "cStandard": "gnu11",
+            "intelliSenseMode": "macos-gcc-arm",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/**"
+            ]
+        }
+    ],
+    "version": 4
+}
