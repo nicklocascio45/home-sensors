@@ -2,6 +2,9 @@
 
 #include "stm32f446xx.h"
 
+#ifndef GPIO_H
+#define GPIO_H
+
 /**
  * Base addresses of each GPIO
  */
@@ -49,4 +52,7 @@ typedef struct
  * Driver APIs
  */
 
+void enable_gpio(void);
+void configure_af(void);
 
+#endif // GPIO_H

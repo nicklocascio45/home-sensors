@@ -1,4 +1,7 @@
+#include <stdint.h>
+
 #include "gpio.h"
+#include "uart.h"
 
 void delay(uint32_t time)
 {
@@ -7,13 +10,12 @@ void delay(uint32_t time)
 
 int main(void)
 {
-	RCC->AHB1ENR |= (1 << 0);
-	GPIOA->MODER |= (1 << 10);
+	enable_gpio();
+	configure_af();
+	uart_init();
 
 	for (;;) {
-		GPIOA->BSRR = (1 << 5);
-		delay(4000000);
-		GPIOA->BSRR = (1 << (5 + 16));
+		uart_write_string("hello");
 		delay(4000000);
 	}
 }

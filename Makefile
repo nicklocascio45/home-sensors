@@ -3,12 +3,15 @@ MACH=cortex-m4
 CFLAGS= -c -mcpu=$(MACH) -mthumb -std=gnu11 -g3 -Wall -I Application/Inc -I Core/Inc -I Drivers/Inc -I Sensors/Inc
 LDFLAGS= -mcpu=$(MACH) -mthumb -nostdlib -T linker.ld -Wl,-Map=build/final.map
 
-all: prereq build/gpio.o build/main.o build/startup.o build/final.elf build/final.bin
+all: prereq build/gpio.o build/uart.o build/main.o build/startup.o build/final.elf build/final.bin
 
 prereq:
 	mkdir -p build
 
 build/gpio.o: Drivers/Src/gpio.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+build/uart.o: Drivers/Src/uart.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 build/main.o: Application/Src/main.c
@@ -17,7 +20,7 @@ build/main.o: Application/Src/main.c
 build/startup.o: Core/Startup/startup_stm32f446xx.c
 	$(CC) $(CFLAGS) -o $@ $^
 
-build/final.elf: build/gpio.o build/main.o build/startup.o
+build/final.elf: build/gpio.o build/uart.o build/main.o build/startup.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 build/final.bin: build/final.elf

@@ -1,5 +1,8 @@
 #include <stdint.h>
 
+#ifndef STM32F446XX_H
+#define STM32F446XX_H
+
 /**
  * Bus base addresses
  */
@@ -73,3 +76,5 @@ typedef struct
 } EXTI_RegDef_t;
 
 #define EXTI				((EXTI_RegDef_t *)EXTI_BASEADDR)
+
+#endif // STM32F446XX_H

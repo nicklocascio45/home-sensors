@@ -2,6 +2,9 @@
 
 #include "stm32f446xx.h"
 
+#ifndef UART_H
+#define UART_H
+
 /**
  * Base addresses
  */
@@ -28,7 +31,6 @@ typedef struct
 	volatile uint32_t GTPR;
 } USART_RegDef_t;
 
-
 /**
  * UART macros
  */
@@ -39,3 +41,12 @@ typedef struct
 #define UART4				((USART_RegDef_t *)UART4_BASEADDR)
 #define UART5				((USART_RegDef_t *)UART5_BASEADDR)
 #define USART6				((USART_RegDef_t *)USART6_BASEADDR)
+
+/**
+ * Driver APIs
+ */
+
+void uart_init(void);
+void uart_write_string(char *string);
+
+#endif // UART_H
