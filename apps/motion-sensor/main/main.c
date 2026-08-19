@@ -1,48 +1,39 @@
-#include "driver/gpio.h"
-#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "freertos/event_groups.h"
+#include "esp_log.h"
 
-#define MOTION_SENSOR_PIN		6
+#include "pir.h"
+#include "led.h"
 
 // Logger tag
 static const char *TAG = "app_main";
 
-static volatile bool motion_detected = false;
-
-static void IRAM_ATTR motion_sensor_isr_handler(void *arg)
-{
-	motion_detected = true;
-}
-
 void app_main(void)
 {
-    // Init pin
-	gpio_config_t io_config = {
-		.intr_type = GPIO_INTR_POSEDGE, // Trigger on rising edge
-		.mode = GPIO_MODE_INPUT,
-		.pin_bit_mask = (1ULL << MOTION_SENSOR_PIN),
-		.pull_down_en = GPIO_PULLDOWN_DISABLE,
-		.pull_up_en = GPIO_PULLUP_DISABLE,
-	};
+	// Set up shared event group
+	EventGroupHandle_t motion_event_group;
+	motion_event_group = xEventGroupCreate();
 
-	gpio_config(&io_config);
+	esp_err_t esp_ret;
 
-	// Install ISR service with default config
-	gpio_install_isr_service(0);
-	// Attach interrupt service routine
-	gpio_isr_handler_add(MOTION_SENSOR_PIN, motion_sensor_isr_handler, NULL);
-
-	ESP_LOGI(TAG, "PIR sensor initialized");
-
-	while(1) {
-		if (motion_detected) {
-			motion_detected = false;
-			ESP_LOGI(TAG, "MOTION!!");
-		} else {
-			ESP_LOGI(TAG, "Biz as usual");
-		}
-
-		vTaskDelay(5000 / portTICK_PERIOD_MS);
+	// Set up PIR sensor
+	esp_ret = pir_init(motion_event_group);
+	if (esp_ret != ESP_OK) {
+		ESP_LOGE(TAG, "Error setting up PIR sensor, aborting...");
+		abort();
 	}
+
+	// Start led task
+	TaskHandle_t led_handle;
+	xTaskCreate(led_task,
+				"led_task",
+				2048,
+				(void *)motion_event_group,
+				10,
+				&led_handle);
+
+	// Infinite loop now that everything is running
+    while (1) {
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+    }
 }
