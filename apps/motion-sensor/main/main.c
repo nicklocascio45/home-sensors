@@ -3,6 +3,7 @@
 #include "esp_log.h"
 
 #include "pir.h"
+#include "display.h"
 #include "led.h"
 
 // Logger tag
@@ -20,6 +21,13 @@ void app_main(void)
 	esp_ret = pir_init(motion_event_group);
 	if (esp_ret != ESP_OK) {
 		ESP_LOGE(TAG, "Error setting up PIR sensor, aborting...");
+		abort();
+	}
+
+	// Set up display
+	esp_ret = display_init();
+	if (esp_ret != ESP_OK) {
+		ESP_LOGE(TAG, "Error setting up display, aborting...");
 		abort();
 	}
 
