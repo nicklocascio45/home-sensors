@@ -1,8 +1,8 @@
 set(srcs)
 set(include_dirs "include")
 
-list(APPEND srcs "led.c")
+list(APPEND srcs "display.c")
 
 idf_component_register(SRCS "${srcs}"
                        INCLUDE_DIRS "${include_dirs}"
-                       PRIV_REQUIRES esp_driver_gpio pir)
+                       PRIV_REQUIRES esp_timer esp_lcd lvgl pir)

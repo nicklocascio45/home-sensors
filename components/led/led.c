@@ -4,6 +4,7 @@
 #include "driver/gpio.h"
 
 #include "led.h"
+#include "pir.h"
 
 #define BLINK_COUNT				3
 #define BLINK_DURATION_SEC		0.5
@@ -43,7 +44,6 @@ void led_task(void *pvParameters)
 													  pdMS_TO_TICKS(10000));
 
 		if ((motion_bits & MOTION_BIT) != 0) {
-			ESP_LOGI(TAG, "Motion detected!");
 			blink_light();
 		}
 	}

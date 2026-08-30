@@ -3,6 +3,7 @@
 #include "esp_log.h"
 
 #include "pir.h"
+#include "display.h"
 #include "led.h"
 
 // Logger tag
@@ -23,6 +24,13 @@ void app_main(void)
 		abort();
 	}
 
+	// Set up display
+	esp_ret = display_init();
+	if (esp_ret != ESP_OK) {
+		ESP_LOGE(TAG, "Error setting up display, aborting...");
+		abort();
+	}
+
 	// Start led task
 	TaskHandle_t led_handle;
 	xTaskCreate(led_task,
@@ -31,6 +39,15 @@ void app_main(void)
 				(void *)motion_event_group,
 				10,
 				&led_handle);
+
+	// Start display tasl
+	TaskHandle_t display_handle;
+	xTaskCreate(display_task,
+				"display_task",
+				4096,
+				(void *)motion_event_group,
+				11,
+				&display_handle);
 
 	// Infinite loop now that everything is running
     while (1) {
