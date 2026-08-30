@@ -5,7 +5,6 @@
 #include "driver/gpio.h"
 
 #include "pir.h"
-#include "led.h"
 
 // Logger tag
 static const char *TAG = "pir";

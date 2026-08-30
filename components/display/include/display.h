@@ -5,5 +5,6 @@
 #define SDA_PIN			10
 
 esp_err_t display_init(void);
+void display_task(void *pvParameters);
 
 #endif // DISPLAY_H

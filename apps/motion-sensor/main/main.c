@@ -40,6 +40,15 @@ void app_main(void)
 				10,
 				&led_handle);
 
+	// Start display tasl
+	TaskHandle_t display_handle;
+	xTaskCreate(display_task,
+				"display_task",
+				4096,
+				(void *)motion_event_group,
+				11,
+				&display_handle);
+
 	// Infinite loop now that everything is running
     while (1) {
         vTaskDelay(5000 / portTICK_PERIOD_MS);
